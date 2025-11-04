@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { useBalance } from '../../contexts/BalanceContext';
 
 interface HighCardPokerGameProps {
     onBack: () => void;
 }
 
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K', 'A'];
-const suits = ['🐔', '🥚', '🌽', '🏆'];
+const suits = ['🦜', '🥚', '🌽', '🏆'];
 const rankValue: { [key: string]: number } = { '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9, 'T': 10, 'J': 11, 'Q': 12, 'K': 13, 'A': 14 };
 
 interface Card {
@@ -28,9 +29,9 @@ const getRandomCard = (deck: Card[]): Card => {
 }
 
 const CardComponent: React.FC<{ card: Card | null; isHidden?: boolean }> = ({ card, isHidden }) => (
-    <div className="w-28 h-40 bg-gray-800 border-2 border-gray-600 rounded-lg flex flex-col justify-between items-center p-2 shadow-lg">
+    <div className={`w-28 h-40 bg-gray-800 border-2 border-gray-600 rounded-lg flex flex-col justify-between items-center p-2 shadow-lg ${!isHidden ? 'animate-card-flip' : ''}`}>
         {isHidden || !card ? (
-            <div className="w-full h-full bg-green-800 rounded-md flex items-center justify-center text-5xl">🐔</div>
+            <div className="w-full h-full bg-green-800 rounded-md flex items-center justify-center text-5xl">🦜</div>
         ) : (
             <>
                 <span className="text-2xl font-bold self-start">{card.rank}{card.suit}</span>
@@ -42,12 +43,21 @@ const CardComponent: React.FC<{ card: Card | null; isHidden?: boolean }> = ({ ca
 );
 
 export const HighCardPokerGame: React.FC<HighCardPokerGameProps> = ({ onBack }) => {
+    const { balance, updateBalance } = useBalance();
     const [deck] = useState(createDeck());
     const [playerCard, setPlayerCard] = useState<Card | null>(null);
     const [houseCard, setHouseCard] = useState<Card | null>(null);
     const [gameState, setGameState] = useState<'start' | 'played' | 'won' | 'lost' | 'tie'>('start');
 
+    const betAmount = 10;
+    const canPlay = balance >= betAmount;
+
     const deal = () => {
+        if (!canPlay) {
+            return;
+        }
+        updateBalance(-betAmount);
+
         const pCard = getRandomCard(deck);
         let hCard = getRandomCard(deck);
         // Ensure cards are different
@@ -57,14 +67,15 @@ export const HighCardPokerGame: React.FC<HighCardPokerGameProps> = ({ onBack }) 
         
         setPlayerCard(pCard);
         setHouseCard(hCard);
-        setGameState('played');
-
+        
         if (rankValue[pCard.rank] > rankValue[hCard.rank]) {
             setGameState('won');
+            updateBalance(betAmount * 2); // Win 1:1, so return stake + winnings
         } else if (rankValue[pCard.rank] < rankValue[hCard.rank]) {
             setGameState('lost');
         } else {
             setGameState('tie');
+            updateBalance(betAmount); // Return stake
         }
     };
     
@@ -75,15 +86,15 @@ export const HighCardPokerGame: React.FC<HighCardPokerGameProps> = ({ onBack }) 
     }
 
     const message = {
-        start: 'Faça sua aposta para começar!',
+        start: canPlay ? `Aposte R$ ${betAmount} para começar!` : 'Saldo insuficiente!',
         played: '...',
         won: 'Você ganhou! Parabéns!',
-        lost: 'O Galinheiro venceu. Mais sorte na próxima!',
+        lost: 'A banca venceu. Mais sorte na próxima!',
         tie: 'Empate! A aposta é devolvida.',
     }[gameState];
 
     const messageColor = {
-        start: 'text-gray-400',
+        start: canPlay ? 'text-gray-400' : 'text-red-400',
         played: 'text-white',
         won: 'text-green-400',
         lost: 'text-red-400',
@@ -99,7 +110,7 @@ export const HighCardPokerGame: React.FC<HighCardPokerGameProps> = ({ onBack }) 
 
             {/* House Hand */}
             <div className="text-center">
-                <p className="font-bold mb-2">Galinheiro</p>
+                <p className="font-bold mb-2">Banca</p>
                 <CardComponent card={houseCard} isHidden={gameState === 'start'} />
             </div>
 
@@ -114,15 +125,15 @@ export const HighCardPokerGame: React.FC<HighCardPokerGameProps> = ({ onBack }) 
             {/* Actions */}
             <div className="flex flex-col w-full max-w-xs space-y-3 pt-4">
                  {gameState === 'start' ? (
-                     <button onClick={deal} className="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg text-xl hover:bg-green-700 transition">
-                        Apostar R$ 10
+                     <button onClick={deal} disabled={!canPlay} className="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg text-xl hover:bg-green-700 transition disabled:bg-gray-500 disabled:cursor-not-allowed btn-press">
+                        Apostar R$ {betAmount}
                     </button>
                  ) : (
-                     <button onClick={reset} className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg text-xl hover:bg-blue-700 transition">
+                     <button onClick={reset} className="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-lg text-xl hover:bg-blue-700 transition btn-press">
                         Jogar Novamente
                     </button>
                  )}
-                <button onClick={onBack} className="w-full bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition">
+                <button onClick={onBack} className="w-full bg-gray-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-700 transition btn-press">
                     Voltar ao Cassino
                 </button>
             </div>

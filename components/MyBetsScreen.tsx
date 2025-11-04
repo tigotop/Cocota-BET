@@ -51,13 +51,13 @@ export const MyBetsScreen: React.FC = () => {
             <div className="bg-gray-800 p-1 rounded-lg flex">
                  <button 
                   onClick={() => setActiveTab('open')} 
-                  className={`w-1/2 py-2 text-sm font-bold rounded-md transition-colors ${activeTab === 'open' ? 'bg-green-600 text-white' : 'text-gray-300'}`}
+                  className={`w-1/2 py-2 text-sm font-bold rounded-md transition-colors btn-press ${activeTab === 'open' ? 'bg-green-600 text-white' : 'text-gray-300'}`}
                 >
                   Abertas ({openBets.length})
                 </button>
                 <button 
                   onClick={() => setActiveTab('settled')} 
-                  className={`w-1/2 py-2 text-sm font-bold rounded-md transition-colors ${activeTab === 'settled' ? 'bg-green-600 text-white' : 'text-gray-300'}`}
+                  className={`w-1/2 py-2 text-sm font-bold rounded-md transition-colors btn-press ${activeTab === 'settled' ? 'bg-green-600 text-white' : 'text-gray-300'}`}
                 >
                   Resolvidas ({settledBets.length})
                 </button>

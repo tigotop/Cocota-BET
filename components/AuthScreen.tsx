@@ -41,7 +41,7 @@ const AuthForm: React.FC<{ onLogin: () => void; isLogin: boolean }> = ({ onLogin
           </div>
       </div>
       <div>
-          <button type="submit" disabled={loading} className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-800 disabled:cursor-not-allowed transition-colors">
+          <button type="submit" disabled={loading} className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-800 disabled:cursor-not-allowed transition-colors btn-press">
               {loading ? 'Processando...' : (isLogin ? 'Entrar' : 'Cadastrar')}
           </button>
       </div>

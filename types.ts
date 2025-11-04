@@ -1,6 +1,7 @@
 export interface GameEvent {
   id: number;
   category: string;
+  eventName?: string;
   teamA: string;
   teamB: string;
   time: string;

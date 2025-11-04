@@ -5,8 +5,8 @@ const mockCategories = [
     { name: 'Basquete', icon: '🏀' },
     { name: 'Tênis', icon: '🎾' },
     { name: 'E-Sports', icon: '🎮' },
-    { name: 'Corrida de Galinhas', icon: '🐔' },
-    { name: 'MMA de Galos', icon: '🐓' },
+    { name: 'Corrida de Galinhas', icon: '🦜' },
+    { name: 'MMA de Galos', icon: '🥊' },
 ];
 
 const ComingSoonCard = ({ title }: { title: string }) => (

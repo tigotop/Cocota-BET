@@ -6,15 +6,24 @@ import { CasinoScreen } from './components/CasinoScreen';
 import { MyBetsScreen } from './components/MyBetsScreen';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
+import { BalanceProvider } from './contexts/BalanceContext';
 
 // Import casino games
 import { CornSlotGame } from './components/games/CornSlotGame';
 import { FarmRouletteGame } from './components/games/FarmRouletteGame';
 import { HighCardPokerGame } from './components/games/HighCardPokerGame';
 import { ChickenBingoGame } from './components/games/ChickenBingoGame';
+import { BlackjackGame } from './components/games/BlackjackGame';
+import { ClassroomScoldingGame } from './components/games/ClassroomScoldingGame';
+import { WhereIsCocotaGame } from './components/games/WhereIsCocotaGame';
+import { CocotaFlightGame } from './components/games/CocotaFlightGame';
+import { MysteryBackpackGame } from './components/games/MysteryBackpackGame';
+import { RubberEraserWarGame } from './components/games/RubberEraserWarGame';
+import { FinalGradeGame } from './components/games/FinalGradeGame';
+import { DueDateGame } from './components/games/DueDateGame';
 
 type ScreenName = 'Início' | 'Esportes' | 'Cassino' | 'Minhas Apostas';
-export type CasinoGameName = 'Caça-Níquel do Milho' | 'Roleta da Granja' | 'Pó-Pó-Pôquer' | 'Bingo do Cacarejo' | null;
+export type CasinoGameName = 'Caça-Níquel do Milho' | 'Roleta da Granja' | 'Pó-Pó-Pôquer' | '21 (Blackjack)' | 'Bingo do Cacarejo' | 'Xingo da Aula' | 'Onde está o Cocota?' | 'Fuga pela Janela' | 'Mochila Misteriosa' | 'Guerra de Borracha' | 'Nota Final' | 'Qual o Mês?' | null;
 
 
 const App: React.FC = () => {
@@ -39,8 +48,24 @@ const App: React.FC = () => {
         return <FarmRouletteGame onBack={() => setActiveCasinoGame(null)} />;
       case 'Pó-Pó-Pôquer':
           return <HighCardPokerGame onBack={() => setActiveCasinoGame(null)} />;
+      case '21 (Blackjack)':
+          return <BlackjackGame onBack={() => setActiveCasinoGame(null)} />;
       case 'Bingo do Cacarejo':
           return <ChickenBingoGame onBack={() => setActiveCasinoGame(null)} />;
+      case 'Xingo da Aula':
+          return <ClassroomScoldingGame onBack={() => setActiveCasinoGame(null)} />;
+      case 'Onde está o Cocota?':
+          return <WhereIsCocotaGame onBack={() => setActiveCasinoGame(null)} />;
+      case 'Fuga pela Janela':
+          return <CocotaFlightGame onBack={() => setActiveCasinoGame(null)} />;
+      case 'Mochila Misteriosa':
+          return <MysteryBackpackGame onBack={() => setActiveCasinoGame(null)} />;
+      case 'Guerra de Borracha':
+          return <RubberEraserWarGame onBack={() => setActiveCasinoGame(null)} />;
+      case 'Nota Final':
+          return <FinalGradeGame onBack={() => setActiveCasinoGame(null)} />;
+      case 'Qual o Mês?':
+          return <DueDateGame onBack={() => setActiveCasinoGame(null)} />;
       default:
         return <CasinoScreen onPlayGame={setActiveCasinoGame} />;
     }
@@ -66,15 +91,17 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="bg-gray-900 text-white min-h-screen font-sans">
-      <div className="relative max-w-md mx-auto h-screen flex flex-col bg-gray-900 shadow-2xl shadow-black">
-        <Header />
-        <div key={activeScreen + (activeCasinoGame || '')} className="flex-1 overflow-y-auto pb-20 animate-fade-in">
-          {renderScreen()}
+    <BalanceProvider>
+      <div className="bg-gray-900 text-white min-h-screen font-sans">
+        <div className="relative max-w-md mx-auto h-screen flex flex-col bg-gray-900 shadow-2xl shadow-black">
+          <Header />
+          <div key={activeScreen + (activeCasinoGame || '')} className="flex-1 overflow-y-auto pb-20 animate-fade-in">
+            {renderScreen()}
+          </div>
+          <BottomNav activeItem={activeScreen} onNavigate={handleNavigate} />
         </div>
-        <BottomNav activeItem={activeScreen} onNavigate={handleNavigate} />
       </div>
-    </div>
+    </BalanceProvider>
   );
 };
 
