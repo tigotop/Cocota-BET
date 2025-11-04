@@ -25,9 +25,10 @@ import { MysteryBackpackGame } from './components/games/MysteryBackpackGame';
 import { RubberEraserWarGame } from './components/games/RubberEraserWarGame';
 import { FinalGradeGame } from './components/games/FinalGradeGame';
 import { DueDateGame } from './components/games/DueDateGame';
+import { CocotaFortuneGame } from './components/games/CocotaFortuneGame';
 
 type ScreenName = 'Início' | 'Esportes' | 'Cassino' | 'Minhas Apostas';
-export type CasinoGameName = 'Caça-Níquel do Milho' | 'Roleta da Granja' | 'Pó-Pó-Pôquer' | '21 (Blackjack)' | 'Bingo do Cacarejo' | 'Xingo da Aula' | 'Onde está o Cocota?' | 'Fuga pela Janela' | 'Mochila Misteriosa' | 'Guerra de Borracha' | 'Nota Final' | 'Qual o Mês?' | null;
+export type CasinoGameName = 'Caça-Níquel do Milho' | 'Roleta da Granja' | 'Pó-Pó-Pôquer' | '21 (Blackjack)' | 'Bingo do Cacarejo' | 'Xingo da Aula' | 'Onde está o Cocota?' | 'Fuga pela Janela' | 'Mochila Misteriosa' | 'Guerra de Borracha' | 'Nota Final' | 'Qual o Mês?' | 'Cocota da Sorte' | null;
 
 
 const App: React.FC = () => {
@@ -51,6 +52,8 @@ const App: React.FC = () => {
 
   const renderCasinoScreen = () => {
     switch (activeCasinoGame) {
+      case 'Cocota da Sorte':
+        return <CocotaFortuneGame onBack={() => setActiveCasinoGame(null)} />;
       case 'Caça-Níquel do Milho':
         return <CornSlotGame onBack={() => setActiveCasinoGame(null)} />;
       case 'Roleta da Granja':

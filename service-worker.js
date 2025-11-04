@@ -28,6 +28,7 @@ const urlsToCache = [
   '/components/games/RubberEraserWarGame.tsx',
   '/components/games/FinalGradeGame.tsx',
   '/components/games/DueDateGame.tsx',
+  '/components/games/CocotaFortuneGame.tsx',
   '/manifest.json',
   '/icons/icon-192.svg',
   '/icons/icon-512.svg',

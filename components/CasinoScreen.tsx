@@ -3,6 +3,12 @@ import type { CasinoGameName } from '../App';
 
 const mockCasinoGames = [
     {
+        name: 'Cocota da Sorte' as const,
+        description: 'Alinhe os cocotas para uma fortuna! Bônus de até 10x!',
+        icon: '🐯',
+        bgColor: 'from-red-600 to-yellow-500'
+    },
+    {
         name: 'Fuga pela Janela' as const,
         description: 'Defina a altura e torça para o Cocota alcançá-la antes de fugir!',
         icon: '🪟',
