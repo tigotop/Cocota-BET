@@ -1,13 +1,6 @@
 import React, { useState } from 'react';
 import type { MyBet } from '../types';
-
-const mockMyBets: MyBet[] = [
-    { id: 1, event: 'Galináceos FC vs Pintinhos United', category: 'Futebol - Brasileirão', stake: 10, odd: 1.85, potentialReturn: 18.50, status: 'Aberta', selection: 'Galináceos FC' },
-    { id: 2, event: 'Garnizé Veloz vs Cocota PÉS', category: 'Corrida de Galinhas', stake: 25, odd: 1.5, potentialReturn: 37.50, status: 'Ganha', selection: 'Garnizé Veloz' },
-    { id: 3, event: 'LA Lakers vs Boston Celtics', category: 'Basquete - NBA', stake: 5, odd: 2.1, potentialReturn: 10.50, status: 'Perdida', selection: 'Boston Celtics' },
-    { id: 4, event: 'Fallen Angels vs Chicken Rush', category: 'E-Sports - CS:GO', stake: 15, odd: 1.4, potentialReturn: 21.00, status: 'Ganha', selection: 'Fallen Angels' },
-     { id: 5, event: 'Real Madrid vs Barcelona', category: 'Futebol - La Liga', stake: 20, odd: 3.4, potentialReturn: 68.00, status: 'Aberta', selection: 'Empate' },
-];
+import { useBets } from '../contexts/BetContext';
 
 const BetCard: React.FC<{ bet: MyBet }> = ({ bet }) => {
     const statusColor = {
@@ -36,9 +29,10 @@ const BetCard: React.FC<{ bet: MyBet }> = ({ bet }) => {
 
 export const MyBetsScreen: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'open' | 'settled'>('open');
+    const { myBets } = useBets();
     
-    const openBets = mockMyBets.filter(b => b.status === 'Aberta');
-    const settledBets = mockMyBets.filter(b => b.status !== 'Aberta');
+    const openBets = myBets.filter(b => b.status === 'Aberta');
+    const settledBets = myBets.filter(b => b.status !== 'Aberta');
 
     return (
         <main className="flex-1 p-4 space-y-4">

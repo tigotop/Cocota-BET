@@ -7,6 +7,10 @@ import { MyBetsScreen } from './components/MyBetsScreen';
 import { Header } from './components/Header';
 import { BottomNav } from './components/BottomNav';
 import { BalanceProvider } from './contexts/BalanceContext';
+import { BetProvider } from './contexts/BetContext';
+import { BetSlip } from './components/BetSlip';
+import type { GameEvent } from './types';
+
 
 // Import casino games
 import { CornSlotGame } from './components/games/CornSlotGame';
@@ -30,6 +34,7 @@ const App: React.FC = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [activeScreen, setActiveScreen] = useState<ScreenName>('Início');
   const [activeCasinoGame, setActiveCasinoGame] = useState<CasinoGameName>(null);
+  const [betSlipSelection, setBetSlipSelection] = useState<{ event: GameEvent; selection: string; odd: number } | null>(null);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -39,6 +44,10 @@ const App: React.FC = () => {
     setActiveCasinoGame(null); // Reset casino game when changing main screens
     setActiveScreen(screen);
   }
+
+  const handlePlaceBet = (event: GameEvent, selection: string, odd: number) => {
+    setBetSlipSelection({ event, selection, odd });
+  };
 
   const renderCasinoScreen = () => {
     switch (activeCasinoGame) {
@@ -74,7 +83,7 @@ const App: React.FC = () => {
   const renderScreen = () => {
     switch (activeScreen) {
       case 'Início':
-        return <HomeScreen />;
+        return <HomeScreen onPlaceBet={handlePlaceBet} />;
       case 'Esportes':
         return <SportsScreen />;
       case 'Cassino':
@@ -82,7 +91,7 @@ const App: React.FC = () => {
       case 'Minhas Apostas':
         return <MyBetsScreen />;
       default:
-        return <HomeScreen />;
+        return <HomeScreen onPlaceBet={handlePlaceBet}/>;
     }
   };
 
@@ -92,15 +101,23 @@ const App: React.FC = () => {
 
   return (
     <BalanceProvider>
-      <div className="bg-gray-900 text-white min-h-screen font-sans">
-        <div className="relative max-w-md mx-auto h-screen flex flex-col bg-gray-900 shadow-2xl shadow-black">
-          <Header />
-          <div key={activeScreen + (activeCasinoGame || '')} className="flex-1 overflow-y-auto pb-20 animate-fade-in">
-            {renderScreen()}
+      <BetProvider>
+        <div className="bg-gray-900 text-white min-h-screen font-sans">
+          <div className="relative max-w-md mx-auto h-screen flex flex-col bg-gray-900 shadow-2xl shadow-black">
+            <Header />
+            <div key={activeScreen + (activeCasinoGame || '')} className="flex-1 overflow-y-auto pb-20 animate-fade-in">
+              {renderScreen()}
+            </div>
+            <BottomNav activeItem={activeScreen} onNavigate={handleNavigate} />
+            {betSlipSelection && (
+              <BetSlip 
+                selection={betSlipSelection}
+                onClose={() => setBetSlipSelection(null)}
+              />
+            )}
           </div>
-          <BottomNav activeItem={activeScreen} onNavigate={handleNavigate} />
         </div>
-      </div>
+      </BetProvider>
     </BalanceProvider>
   );
 };
